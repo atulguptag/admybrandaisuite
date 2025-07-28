@@ -1844,6 +1844,267 @@ const DemoModal: React.FC<DemoModalProps> = ({
   </>
 );
 
+// Interface for PricingCalculator props
+interface PricingCalculatorProps {
+  darkMode: boolean;
+  calculatorData: CalculatorData;
+  setCalculatorData: (data: CalculatorData) => void;
+  calculatedPrice: number;
+  setCalculatedPrice: (price: number) => void;
+  calculatePrice: (
+    campaigns: number,
+    teamMembers: number,
+    monthlyBudget: number
+  ) => number;
+}
+
+const PricingCalculator: React.FC<PricingCalculatorProps> = ({
+  darkMode,
+  calculatorData,
+  setCalculatorData,
+  calculatedPrice,
+  setCalculatedPrice,
+  calculatePrice,
+}) => (
+  <div className="px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 animate-fade-in">
+    <div className="max-w-4xl mx-auto">
+      <div
+        className={`p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl transition-all duration-300 ${
+          darkMode
+            ? "bg-gray-800/80 border border-gray-700/50 shadow-2xl"
+            : "bg-white border border-gray-100 shadow-xl"
+        } backdrop-blur-lg`}
+      >
+        <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display mb-3 sm:mb-4">
+            Calculate Your Custom Price
+          </h3>
+          <p
+            className={`text-sm sm:text-base lg:text-lg ${
+              darkMode ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            Get personalized pricing based on your specific needs
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
+          <div className="space-y-6 sm:space-y-8">
+            {/* Campaigns Slider */}
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex justify-between items-center">
+                <label
+                  className={`text-sm sm:text-base font-semibold ${
+                    darkMode ? "text-gray-200" : "text-gray-800"
+                  }`}
+                >
+                  Number of Campaigns
+                </label>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                    darkMode
+                      ? "bg-[#e40678]/20 text-[#e40678]"
+                      : "bg-[#e40678]/10 text-[#e40678]"
+                  }`}
+                >
+                  {calculatorData.campaigns}
+                </span>
+              </div>
+              <div className="relative">
+                <input
+                  type="range"
+                  min="1"
+                  max="50"
+                  value={calculatorData.campaigns}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const newData: CalculatorData = {
+                      ...calculatorData,
+                      campaigns: parseInt(e.target.value),
+                    };
+                    setCalculatorData(newData);
+                    setCalculatedPrice(
+                      calculatePrice(
+                        newData.campaigns,
+                        newData.teamMembers,
+                        newData.monthlyBudget
+                      )
+                    );
+                  }}
+                  className={`w-full h-2 sm:h-3 rounded-lg appearance-none cursor-pointer transition-all duration-200 ${
+                    darkMode
+                      ? "bg-gray-700 slider-thumb-dark"
+                      : "bg-gray-200 slider-thumb-light"
+                  }`}
+                  style={{
+                    background: `linear-gradient(to right, #e40678 0%, #e40678 ${
+                      (calculatorData.campaigns / 50) * 100
+                    }%, ${darkMode ? "#374151" : "#e5e7eb"} ${
+                      (calculatorData.campaigns / 50) * 100
+                    }%, ${darkMode ? "#374151" : "#e5e7eb"} 100%)`,
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Team Members Slider */}
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex justify-between items-center">
+                <label
+                  className={`text-sm sm:text-base font-semibold ${
+                    darkMode ? "text-gray-200" : "text-gray-800"
+                  }`}
+                >
+                  Team Members
+                </label>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                    darkMode
+                      ? "bg-[#e40678]/20 text-[#e40678]"
+                      : "bg-[#e40678]/10 text-[#e40678]"
+                  }`}
+                >
+                  {calculatorData.teamMembers}
+                </span>
+              </div>
+              <div className="relative">
+                <input
+                  type="range"
+                  min="1"
+                  max="50"
+                  value={calculatorData.teamMembers}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const newData: CalculatorData = {
+                      ...calculatorData,
+                      teamMembers: parseInt(e.target.value),
+                    };
+                    setCalculatorData(newData);
+                    setCalculatedPrice(
+                      calculatePrice(
+                        newData.campaigns,
+                        newData.teamMembers,
+                        newData.monthlyBudget
+                      )
+                    );
+                  }}
+                  className={`w-full h-2 sm:h-3 rounded-lg appearance-none cursor-pointer transition-all duration-200 ${
+                    darkMode
+                      ? "bg-gray-700 slider-thumb-dark"
+                      : "bg-gray-200 slider-thumb-light"
+                  }`}
+                  style={{
+                    background: `linear-gradient(to right, #e40678 0%, #e40678 ${
+                      (calculatorData.teamMembers / 50) * 100
+                    }%, ${darkMode ? "#374151" : "#e5e7eb"} ${
+                      (calculatorData.teamMembers / 50) * 100
+                    }%, ${darkMode ? "#374151" : "#e5e7eb"} 100%)`,
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Monthly Budget Slider */}
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex justify-between items-center">
+                <label
+                  className={`text-sm sm:text-base font-semibold ${
+                    darkMode ? "text-gray-200" : "text-gray-800"
+                  }`}
+                >
+                  Monthly Ad Budget
+                </label>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                    darkMode
+                      ? "bg-[#e40678]/20 text-[#e40678]"
+                      : "bg-[#e40678]/10 text-[#e40678]"
+                  }`}
+                >
+                  ${calculatorData.monthlyBudget.toLocaleString()}
+                </span>
+              </div>
+              <div className="relative">
+                <input
+                  type="range"
+                  min="500"
+                  max="10000"
+                  step="500"
+                  value={calculatorData.monthlyBudget}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const newData: CalculatorData = {
+                      ...calculatorData,
+                      monthlyBudget: parseInt(e.target.value),
+                    };
+                    setCalculatorData(newData);
+                    setCalculatedPrice(
+                      calculatePrice(
+                        newData.campaigns,
+                        newData.teamMembers,
+                        newData.monthlyBudget
+                      )
+                    );
+                  }}
+                  className={`w-full h-2 sm:h-3 rounded-lg appearance-none cursor-pointer transition-all duration-200 ${
+                    darkMode
+                      ? "bg-gray-700 slider-thumb-dark"
+                      : "bg-gray-200 slider-thumb-light"
+                  }`}
+                  style={{
+                    background: `linear-gradient(to right, #e40678 0%, #e40678 ${
+                      ((calculatorData.monthlyBudget - 500) / 9500) * 100
+                    }%, ${darkMode ? "#374151" : "#e5e7eb"} ${
+                      ((calculatorData.monthlyBudget - 500) / 9500) * 100
+                    }%, ${darkMode ? "#374151" : "#e5e7eb"} 100%)`,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Price Display */}
+          <div className="flex items-center justify-center">
+            <div
+              className={`p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border-2 border-[#e40678] w-full max-w-md mx-auto transition-all duration-300 hover:shadow-2xl hover:scale-105 ${
+                darkMode
+                  ? "bg-[#e40678]/10 hover:bg-[#e40678]/15"
+                  : "bg-[#e40678]/5 hover:bg-[#e40678]/10"
+              }`}
+            >
+              <div className="text-center space-y-3 sm:space-y-4">
+                <div
+                  className={`text-sm sm:text-base font-medium ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  Estimated Monthly Cost
+                </div>
+                <div className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#e40678] font-display">
+                  ${calculatedPrice}
+                </div>
+                <div
+                  className={`text-lg sm:text-xl font-medium ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  per month
+                </div>
+                <button
+                  className={`w-full mt-4 sm:mt-6 px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer ${
+                    darkMode
+                      ? "bg-[#e40678] hover:bg-[#e40678]/90 text-white"
+                      : "bg-[#e40678] hover:bg-[#e40678]/90 text-white"
+                  }`}
+                >
+                  Get Started Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 // Component Type
 const ADmyBrandLandingPage: React.FC = () => {
   // State with proper TypeScript typing
@@ -1864,6 +2125,35 @@ const ADmyBrandLandingPage: React.FC = () => {
   const [newsletterError, setNewsletterError] = useState<string>("");
 
   const [showDemoModal, setShowDemoModal] = useState<boolean>(false);
+
+  // Add calculator state and calculated price
+  const [calculatorData, setCalculatorData] = useState<CalculatorData>({
+    campaigns: 5,
+    teamMembers: 1,
+    monthlyBudget: 1000,
+  });
+  const [calculatedPrice, setCalculatedPrice] = useState<number>(29);
+
+  // Add calculatePrice function
+  const calculatePrice = (
+    campaigns: number,
+    teamMembers: number,
+    monthlyBudget: number
+  ): number => {
+    let basePrice = 29;
+    if (campaigns > 5) basePrice = 99;
+    if (campaigns > 20) basePrice = 299;
+
+    const teamExtra =
+      Math.max(
+        0,
+        teamMembers - (basePrice === 29 ? 1 : basePrice === 99 ? 10 : 999)
+      ) * 10;
+    const budgetMultiplier =
+      monthlyBudget > 5000 ? 1.2 : monthlyBudget > 2000 ? 1.1 : 1;
+
+    return Math.round((basePrice + teamExtra) * budgetMultiplier);
+  };
 
   useEffect(() => {
     if (showDemoModal) {
@@ -2307,273 +2597,6 @@ const ADmyBrandLandingPage: React.FC = () => {
     </section>
   );
 
-  const [calculatorData, setCalculatorData] = useState<CalculatorData>({
-    campaigns: 5,
-    teamMembers: 1,
-    monthlyBudget: 1000,
-  });
-  const [calculatedPrice, setCalculatedPrice] = useState<number>(29);
-
-  const calculatePrice = (
-    campaigns: number,
-    teamMembers: number,
-    monthlyBudget: number
-  ): number => {
-    let basePrice = 29;
-    if (campaigns > 5) basePrice = 99;
-    if (campaigns > 20) basePrice = 299;
-
-    const teamExtra =
-      Math.max(
-        0,
-        teamMembers - (basePrice === 29 ? 1 : basePrice === 99 ? 10 : 999)
-      ) * 10;
-    const budgetMultiplier =
-      monthlyBudget > 5000 ? 1.2 : monthlyBudget > 2000 ? 1.1 : 1;
-
-    return Math.round((basePrice + teamExtra) * budgetMultiplier);
-  };
-
-  const PricingCalculator: React.FC = () => (
-    <div className="px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 animate-fade-in">
-      <div className="max-w-4xl mx-auto">
-        <div
-          className={`p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl transition-all duration-300 ${
-            darkMode
-              ? "bg-gray-800/80 border border-gray-700/50 shadow-2xl"
-              : "bg-white border border-gray-100 shadow-xl"
-          } backdrop-blur-lg`}
-        >
-          <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display mb-3 sm:mb-4">
-              Calculate Your Custom Price
-            </h3>
-            <p
-              className={`text-sm sm:text-base lg:text-lg ${
-                darkMode ? "text-gray-300" : "text-gray-600"
-              }`}
-            >
-              Get personalized pricing based on your specific needs
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
-            <div className="space-y-6 sm:space-y-8">
-              {/* Campaigns Slider */}
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex justify-between items-center">
-                  <label
-                    className={`text-sm sm:text-base font-semibold ${
-                      darkMode ? "text-gray-200" : "text-gray-800"
-                    }`}
-                  >
-                    Number of Campaigns
-                  </label>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-                      darkMode
-                        ? "bg-[#e40678]/20 text-[#e40678]"
-                        : "bg-[#e40678]/10 text-[#e40678]"
-                    }`}
-                  >
-                    {calculatorData.campaigns}
-                  </span>
-                </div>
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="1"
-                    max="50"
-                    value={calculatorData.campaigns}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      const newData: CalculatorData = {
-                        ...calculatorData,
-                        campaigns: parseInt(e.target.value),
-                      };
-                      setCalculatorData(newData);
-                      setCalculatedPrice(
-                        calculatePrice(
-                          newData.campaigns,
-                          newData.teamMembers,
-                          newData.monthlyBudget
-                        )
-                      );
-                    }}
-                    className={`w-full h-2 sm:h-3 rounded-lg appearance-none cursor-pointer transition-all duration-200 ${
-                      darkMode
-                        ? "bg-gray-700 slider-thumb-dark"
-                        : "bg-gray-200 slider-thumb-light"
-                    }`}
-                    style={{
-                      background: `linear-gradient(to right, #e40678 0%, #e40678 ${
-                        (calculatorData.campaigns / 50) * 100
-                      }%, ${darkMode ? "#374151" : "#e5e7eb"} ${
-                        (calculatorData.campaigns / 50) * 100
-                      }%, ${darkMode ? "#374151" : "#e5e7eb"} 100%)`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Team Members Slider */}
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex justify-between items-center">
-                  <label
-                    className={`text-sm sm:text-base font-semibold ${
-                      darkMode ? "text-gray-200" : "text-gray-800"
-                    }`}
-                  >
-                    Team Members
-                  </label>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-                      darkMode
-                        ? "bg-[#e40678]/20 text-[#e40678]"
-                        : "bg-[#e40678]/10 text-[#e40678]"
-                    }`}
-                  >
-                    {calculatorData.teamMembers}
-                  </span>
-                </div>
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="1"
-                    max="50"
-                    value={calculatorData.teamMembers}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      const newData: CalculatorData = {
-                        ...calculatorData,
-                        teamMembers: parseInt(e.target.value),
-                      };
-                      setCalculatorData(newData);
-                      setCalculatedPrice(
-                        calculatePrice(
-                          newData.campaigns,
-                          newData.teamMembers,
-                          newData.monthlyBudget
-                        )
-                      );
-                    }}
-                    className={`w-full h-2 sm:h-3 rounded-lg appearance-none cursor-pointer transition-all duration-200 ${
-                      darkMode
-                        ? "bg-gray-700 slider-thumb-dark"
-                        : "bg-gray-200 slider-thumb-light"
-                    }`}
-                    style={{
-                      background: `linear-gradient(to right, #e40678 0%, #e40678 ${
-                        (calculatorData.teamMembers / 50) * 100
-                      }%, ${darkMode ? "#374151" : "#e5e7eb"} ${
-                        (calculatorData.teamMembers / 50) * 100
-                      }%, ${darkMode ? "#374151" : "#e5e7eb"} 100%)`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Monthly Budget Slider */}
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex justify-between items-center">
-                  <label
-                    className={`text-sm sm:text-base font-semibold ${
-                      darkMode ? "text-gray-200" : "text-gray-800"
-                    }`}
-                  >
-                    Monthly Ad Budget
-                  </label>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-                      darkMode
-                        ? "bg-[#e40678]/20 text-[#e40678]"
-                        : "bg-[#e40678]/10 text-[#e40678]"
-                    }`}
-                  >
-                    ${calculatorData.monthlyBudget.toLocaleString()}
-                  </span>
-                </div>
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="500"
-                    max="10000"
-                    step="500"
-                    value={calculatorData.monthlyBudget}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      const newData: CalculatorData = {
-                        ...calculatorData,
-                        monthlyBudget: parseInt(e.target.value),
-                      };
-                      setCalculatorData(newData);
-                      setCalculatedPrice(
-                        calculatePrice(
-                          newData.campaigns,
-                          newData.teamMembers,
-                          newData.monthlyBudget
-                        )
-                      );
-                    }}
-                    className={`w-full h-2 sm:h-3 rounded-lg appearance-none cursor-pointer transition-all duration-200 ${
-                      darkMode
-                        ? "bg-gray-700 slider-thumb-dark"
-                        : "bg-gray-200 slider-thumb-light"
-                    }`}
-                    style={{
-                      background: `linear-gradient(to right, #e40678 0%, #e40678 ${
-                        ((calculatorData.monthlyBudget - 500) / 9500) * 100
-                      }%, ${darkMode ? "#374151" : "#e5e7eb"} ${
-                        ((calculatorData.monthlyBudget - 500) / 9500) * 100
-                      }%, ${darkMode ? "#374151" : "#e5e7eb"} 100%)`,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Price Display */}
-            <div className="flex items-center justify-center">
-              <div
-                className={`p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border-2 border-[#e40678] w-full max-w-md mx-auto transition-all duration-300 hover:shadow-2xl hover:scale-105 ${
-                  darkMode
-                    ? "bg-[#e40678]/10 hover:bg-[#e40678]/15"
-                    : "bg-[#e40678]/5 hover:bg-[#e40678]/10"
-                }`}
-              >
-                <div className="text-center space-y-3 sm:space-y-4">
-                  <div
-                    className={`text-sm sm:text-base font-medium ${
-                      darkMode ? "text-gray-300" : "text-gray-600"
-                    }`}
-                  >
-                    Estimated Monthly Cost
-                  </div>
-                  <div className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#e40678] font-display">
-                    ${calculatedPrice}
-                  </div>
-                  <div
-                    className={`text-lg sm:text-xl font-medium ${
-                      darkMode ? "text-gray-300" : "text-gray-600"
-                    }`}
-                  >
-                    per month
-                  </div>
-                  <button
-                    className={`w-full mt-4 sm:mt-6 px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer ${
-                      darkMode
-                        ? "bg-[#e40678] hover:bg-[#e40678]/90 text-white"
-                        : "bg-[#e40678] hover:bg-[#e40678]/90 text-white"
-                    }`}
-                  >
-                    Get Started Now
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
@@ -2596,7 +2619,14 @@ const ADmyBrandLandingPage: React.FC = () => {
       <FeaturesSection darkMode={darkMode} features={features} />
 
       {/* Pricing Calculator Section */}
-      <PricingCalculator />
+      <PricingCalculator
+        darkMode={darkMode}
+        calculatorData={calculatorData}
+        setCalculatorData={setCalculatorData}
+        calculatedPrice={calculatedPrice}
+        setCalculatedPrice={setCalculatedPrice}
+        calculatePrice={calculatePrice}
+      />
 
       {/* Pricing Section */}
       <PricingSection darkMode={darkMode} pricingPlans={pricingPlans} />
